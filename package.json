@@ -1,0 +1,25 @@
+{
+  "name": "SkyEyes",
+  "version": "1.0.0",
+  "description": "手撸一个性能监控平台1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tok-gogogo/SkyEyes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tok-gogogo/SkyEyes/issues"
+  },
+  "homepage": "https://github.com/tok-gogogo/SkyEyes#readme",
+  "devDependencies": {
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1"
+  }
+}
