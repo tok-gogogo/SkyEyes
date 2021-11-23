@@ -4,7 +4,6 @@
 export enum EVENTTYPES {
   XHR = 'xhr',
   FETCH = 'fetch',
-  CONSOLE = 'console',
   DOM = 'dom',
   HISTORY = 'history',
   ERROR = 'error',

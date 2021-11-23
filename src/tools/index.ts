@@ -1,6 +1,7 @@
 interface IObjectProto {
   [key: string]: any
 }
+
 /**
  *
  * 重写对象的某个属性进行aop插入数据收集代码
@@ -8,9 +9,9 @@ interface IObjectProto {
  * @param key 需要被重写对象的key
  * @param callback 以原有的函数作为参数，执行并重写原有函数
  */
-export function aopObject(source: IObjectProto, key: string, callback: (...args: any[]) => any,): void {
+export function aopObject(source: IObjectProto, key: string, callback: (...args: any[]) => any): void {
   if (source === undefined) return
-  if (key in source ) {
+  if (key in source) {
     const original = source[key]
     const wrapped = callback(original)
     if (typeof wrapped === 'function') {
@@ -44,6 +45,7 @@ function isType(type: string) {
     return Object.prototype.toString.call(value) === `[object ${type}]`
   }
 }
+
 export const typeDetection = {
   isNumber: isType('Number'),
   isString: isType('String'),
@@ -55,4 +57,31 @@ export const typeDetection = {
   isObject: isType('Object'),
   isArray: isType('Array'),
   isWindow: isType('Window')
+}
+
+export declare type voidFun = () => void;
+/**
+ * 自定义try函数，添加fn 回调函数
+ * @param fn try中执行的函数体
+ * @param errorFn 报错时执行的函数体，将err传入
+ */
+export function tryCatch(fn: voidFun, errorFn?: (err: any) => void): void {
+  try {
+    fn()
+  } catch (err) {
+    console.log('err', err)
+    if (errorFn) {
+      errorFn(err)
+    }
+  }
+}
+
+/**
+ * 判断执行环境 是否是browser环境
+ */
+export function isBrowserEnv(): boolean {
+  if (typeof window !== 'undefined' && typeDetection.isWindow(window))
+    return true;
+  else
+    return false
 }
