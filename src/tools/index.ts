@@ -60,6 +60,7 @@ export const typeDetection = {
 }
 
 export declare type voidFun = () => void;
+
 /**
  * 自定义try函数，添加fn 回调函数
  * @param fn try中执行的函数体
@@ -84,4 +85,80 @@ export function isBrowserEnv(): boolean {
     return true;
   else
     return false
+}
+
+/** 生成唯一id**/
+export function generateSEId(): string {
+  let d = new Date().getTime()
+  const seId = 'ssssssss-xsss-4sss-esss-ssssssssssss'.replace(/[se]/g, function (c) {
+    const r = (d + Math.random() * 16) % 16 | 0
+    d = Math.floor(d / 16)
+    return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16)
+  })
+  return seId
+}
+
+/**
+ * 添加自定义事件监听器
+ * @param target
+ * @param eventName
+ * @param handler
+ * @param opitons
+ */
+export function addListen(
+  target: { addEventListener: Function },
+  eventName: string,
+  callback: Function,
+  option: boolean | unknown = false
+): void {
+  target.addEventListener(eventName, callback, option)
+}
+
+/**
+ * 获取当前时间
+ */
+export  function  getNow(){
+  return Date.now();
+}
+
+/**
+ * 判断property
+ * @param obj
+ * @param key
+ */
+export function hasProperty(obj: Object, key: string | number | symbol): boolean {
+  return obj.hasOwnProperty(key)
+}
+
+
+/**
+ * 节流函数
+ * @param fn
+ * @param delay
+ */
+export const throttle = (fn: Function, delay: number): Function => {
+  let canRun = true
+  return function (...args: any) {
+    if (!canRun) return
+    fn.apply(this, args)
+    canRun = false
+    setTimeout(() => {
+      canRun = true
+    }, delay)
+  }
+}
+
+/**
+ *
+ */
+export function supportsHistory(): boolean {
+  // NOTE: in Chrome App environment, touching history.pushState, *even inside
+  //       a try/catch block*, will cause Chrome to output an error to console.error
+  // borrowed from: https://github.com/angular/angular.js/pull/13945/files
+  const chrome = (window as any).chrome
+  // tslint:disable-next-line:no-unsafe-any
+  const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime
+  const hasHistoryApi = 'history' in window && !!window.history.pushState && !!window.history.replaceState
+
+  return !isChromePackagedApp && hasHistoryApi
 }

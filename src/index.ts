@@ -1,6 +1,21 @@
-import {EVENTTYPES} from "./type";
-import {AopCallback, aopHandler, subscribe} from "./subscribe";
-import {aopObject, isBrowserEnv, typeDetection, voidFun} from "./tools";
+import {EVENTTYPES, HTTP_CODE} from "./type";
+import {AopCallback, aopHandler, publishHandler, subscribe} from "./subscribe";
+import {
+  addListen,
+  aopObject,
+  generateSEId, getNow, hasProperty,
+  isBrowserEnv, supportsHistory, throttle,
+  typeDetection,
+  voidFun
+} from "./tools";
+import {
+  domAop,
+  fetchAop,
+  historyAop,
+  listenErrorAop, listenHashchangeAop,
+  unhandledrejectionAop,
+  xhrAop
+} from "./aop";
 
 function init(options: {}): void {
   webInit(options)
@@ -18,6 +33,41 @@ function webInit(options: {}): void {
       //todo:事件拦截的回调,进行消息发送
     }
   })
+  //拦截fetch
+  addAopHandler({
+    type: EVENTTYPES.FETCH,
+    callback: (data) => {
+      //todo:事件拦截的回调,进行消息发送
+    }
+  })
+  //拦截ERROR
+  addAopHandler({
+    type: EVENTTYPES.ERROR,
+    callback: (data) => {
+      //todo:事件拦截的回调,进行消息发送
+    }
+  })
+  //拦截HASHCHANGE
+  addAopHandler({
+    type: EVENTTYPES.HASHCHANGE,
+    callback: (data) => {
+      //todo:事件拦截的回调,进行消息发送
+    }
+  })
+  //拦截Dom点击
+  addAopHandler({
+    type: EVENTTYPES.DOM,
+    callback: (data) => {
+      //todo:事件拦截的回调,进行消息发送
+    }
+  })
+  //拦截HISTORY改变
+  addAopHandler({
+    type: EVENTTYPES.HISTORY,
+    callback: (data) => {
+      //todo:事件拦截的回调,进行消息发送
+    }
+  })
 }
 
 function addAopHandler(handler: aopHandler) {
@@ -31,63 +81,28 @@ function aopFunction(type: EVENTTYPES) {
       xhrAop()
       break
     case EVENTTYPES.FETCH:
-      // fetchAop()
+      fetchAop()
       break
     case EVENTTYPES.ERROR:
-      // listenError()
+      listenErrorAop()
       break
     case EVENTTYPES.HISTORY:
-      // historyAop()
+      historyAop()
       break
     case EVENTTYPES.UNHANDLEDREJECTION:
-      // unhandledrejectionAop()
+      unhandledrejectionAop()
       break
     case EVENTTYPES.DOM:
-      // domAop()
+      //点击事件埋点
+      domAop()
       break
     case EVENTTYPES.HASHCHANGE:
-      // listenHashchange()
+      listenHashchangeAop()
       break
     default:
       break
   }
 }
 
-export declare interface SEXMLHttpRequest extends XMLHttpRequest {
-  [key: string]: any;
-
-  se_http_info?: SEHttp_Info;
-}
-
-export interface SEHttp_Info {
-  type: string
-  id?: string
-  method?: string
-  url?: string
-  status?: number
-  reqData?: any
-  sTime?: number
-  elapsedTime?: number
-  responseText?: any
-  time?: number
-}
-
-function xhrAop(): void {
-  //browser环境 且支持XMLHttpRequest
-  if (!isBrowserEnv() || !('XMLHttpRequest' in window)) return
-
-  let proto = XMLHttpRequest.prototype;
-  aopObject(proto, 'open', (originFun: voidFun): any => {
-    return function (that: SEXMLHttpRequest, ...args: any[]): void {
-      that.se_http_info = {
-        method: typeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0],
-        url: args[1],
-        sTime: Date.now(),
-        type: 'xhr'
-      }
-      originFun.apply(that, args)
-    }
-  })
-}
 
 export {init}
