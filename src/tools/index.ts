@@ -2,6 +2,7 @@ interface IObjectProto {
   [key: string]: any
 }
 
+
 /**
  *
  * 重写对象的某个属性进行aop插入数据收集代码
